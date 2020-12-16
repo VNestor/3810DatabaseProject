@@ -11,57 +11,70 @@ import java.util.*;
  * @author VICTOR NESTOR
  */
 public class RemoveStudent {
-     public static void main(String[] args) {
-      int emplid;   // To hold the EMPLID number
-      String sure;      // To make sure the user wants to delete
+    public static void main(String[] args) {
+        int emplid;   // To hold the EMPLID number
+        String sure;      // To make sure the user wants to delete
 
-      // Create a named constant for the URL.
-      // NOTE: This value is specific for Java DB.
-      final String DB_URL = "jdbc:derby://localhost:1527/StudentDB";
+        // Create a named constant for the URL.
+        // NOTE: This value is specific for Java DB.
+        final String DB_URL = "jdbc:derby://localhost:1527/StudentDB";
 
-      // Create a Scanner object for keyboard input.
-      Scanner keyboard = new Scanner(System.in);
+        // Create a Scanner object for keyboard input.
+        Scanner keyboard = new Scanner(System.in);
+        
+        while(true){
+            try {
+                
+               // Create a connection to the database.
+               Connection conn = DriverManager.getConnection(DB_URL);
 
-      try {
-         // Create a connection to the database.
-         Connection conn = DriverManager.getConnection(DB_URL);
+              // Create a Statement object.
+              Statement stmt = conn.createStatement();
 
-         // Create a Statement object.
-         Statement stmt = conn.createStatement();
+              // Get the product number for the desired student.
+              System.out.print("Enter the student's EMPLID: ");
+              emplid = keyboard.nextInt();
 
-         // Get the product number for the desired student.
-         System.out.print("Enter the student's EMPLID: ");
-         emplid = keyboard.nextInt();
-
-         // Display the student's current data.
-         if (findAndDisplayStudent(stmt, emplid)) {
-            // Make sure the user wants to remove this student.
-            System.out.print("Are you sure you want to remove " +
+              // Display the student's current data.
+              if (findAndDisplayStudent(stmt, emplid)) {
+                  
+                  // Make sure the user wants to remove this student.
+                  System.out.print("Are you sure you want to remove " +
                              "this student? (Y/N): ");
-            keyboard.nextLine();
-            sure = keyboard.nextLine();
+                  keyboard.nextLine();
+                  sure = keyboard.nextLine();
 
-            if (Character.toUpperCase(sure.charAt(0)) == 'Y') {
-               // remove student.
-               removeStudent(stmt, emplid);
+                  if (Character.toUpperCase(sure.charAt(0)) == 'Y') {
+                  
+                  // remove student.
+                  removeStudent(stmt, emplid);
+            } else {
+                      System.out.println("The student was not removed.");
+                  }
+              } else {
+                  
+                  // The specified product number was not found.
+                  System.out.println("That student was not found.");
+              }
+              
+              // Close the connection.
+              conn.close();
+              break;
+            
+            } 
+            
+            catch(Exception ex) {
+                System.out.println("ERROR: PLEASE CHECK THAT YOU ARE ENTERING A NAME OR NUMBER IN THE CORRECT FIELD.");
+                //Reset scanner
+                keyboard.reset();
+                //Reads any invalid input
+                keyboard.nextLine();
             }
-            else {
-               System.out.println("The student was not removed.");
-            }
-         }
-         else {
-            // The specified product number was not found.
-            System.out.println("That student was not found.");
-         }
-
-         // Close the connection.
-         conn.close();
-      }
-      catch(Exception ex) {
-         System.out.println("ERROR: " + ex.getMessage());
-      }
-      keyboard.close();
-   }
+        }
+        //End
+        keyboard.close();
+        System.out.println("Database succesfully updated!");
+    }
 
    /**
      The findAndDisplayProduct method finds a specified student's
