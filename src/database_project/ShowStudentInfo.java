@@ -18,6 +18,24 @@ public class ShowStudentInfo {
          // Create a connection to the database.
          Connection conn = DriverManager.getConnection(DB_URL);
          
+        // Create a Statement object.
+         Statement upperNames = conn.createStatement();
+         
+         // Create a string with a SELECT statement.
+         String upperNameStatement = "UPDATE STUDENTS SET NAME = UPPER(NAME)";
+         
+         // Send the update statement to the DBMS.
+         int upperResult = upperNames.executeUpdate(upperNameStatement);
+         
+         // Create a Statement object.
+         Statement upperStatus = conn.createStatement();
+         
+         // Create a string with a SELECT statement.
+         String upperStatusStatement = "UPDATE STUDENTS SET STATUS = UPPER(STATUS)";
+         
+         // Send the update statement to the DBMS.
+         int statusResult = upperStatus.executeUpdate(upperStatusStatement);
+         
          // Create a Statement object.
          Statement stmt = conn.createStatement();
          
